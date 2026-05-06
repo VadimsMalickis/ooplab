@@ -7,17 +7,13 @@ import java.util.*;
 public class TodoListService {
     private ArrayList<String> tasks;
     private final String filePath = "todo.csv";
-    
 
     public TodoListService() {
         this.tasks = new ArrayList<>();
-        loadTaskFromFile();
+        loadTasksFromFile();
     }
 
-    // Izlasīt todo.csv failu
-    // Un papildināt tasks ArrayList ar datiem
-    // no faila
-    private void loadTaskFromFile() {
+    private void loadTasksFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -29,13 +25,8 @@ public class TodoListService {
         }
     }
 
-    private int getLastId() {
-        String lastTask = this.tasks.get(this.tasks.size() -1);
-        return Integer.valueOf(lastTask.split(",")[0]);
-    }
-
     public void add(String task) {
-        this.tasks.add(task);
+        this.tasks.add(getLastId() + "," + task);
     }
 
     public ArrayList<String> getTasks() {
@@ -48,17 +39,17 @@ public class TodoListService {
         }
     }
 
-    // Pievienot updateFile() metodi
-    // Kura atjauno/pārraksta .csv failu ar jauniem datiem
-    // Izmantojot esošo tasks ArrayList masīvu
-    private boolean updateFile() {
-        return false;
-    }
-
-    // Rediģēt remove() metodi
     public void remove(int number) {
         if (number > 0 && number <= this.tasks.size()) {
             this.tasks.remove(number - 1);
         }
+    }
+    private boolean updateFile() {
+        return false;
+    }
+    
+    private int getLastId() {
+        String lastTask = this.tasks.get(this.tasks.size() -1);
+        return Integer.valueOf(lastTask.split(",")[0]);
     }
 }

@@ -19,7 +19,7 @@ public class TodoUI {
 
         createComponents(frame);
 
-        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
