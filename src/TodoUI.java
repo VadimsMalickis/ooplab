@@ -23,24 +23,10 @@ public class TodoUI {
         frame.setVisible(true);
     }
 
-    private String[][] arrayListToTableData() {
-        int columns = 2;
-        int rows = this.todoList.getTasks().size();
-        String[][] data = new String[rows][columns];
-        for (int i = 0; i < rows; i++) {
-            for (String task : todoList.getTasks()) {
-                String[] parts = task.split(",");
-                data[i][0] = parts[0];
-                data[i][1] = parts[1];
-            }
-        }
-        return data;
-    }
-
     private void createComponents(JFrame frame) {
      
         String[] headerRow = {"id", "task"};
-        String[][] data = arrayListToTableData();
+        String[][] data = todoList.arrayListToTableData();
         
         this.table = new JTable(data, headerRow);
         

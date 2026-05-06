@@ -13,16 +13,16 @@ public class TodoListService {
         loadTasksFromFile();
     }
 
-    private void loadTasksFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                this.tasks.add(line);
-            }
-            
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe.getMessage());
+    public String[][] arrayListToTableData() {
+        int columns = 2;
+        int rows = this.tasks.size();
+        String[][] data = new String[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            String[] parts = this.tasks.get(i).split(",");
+            data[i][0] = parts[0];
+            data[i][1] = parts[1];
         }
+        return data;
     }
 
     public void add(String task) {
@@ -44,12 +44,26 @@ public class TodoListService {
             this.tasks.remove(number - 1);
         }
     }
+
+    private void loadTasksFromFile() {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            br.readLine(); // Ignore header row
+            String line;
+            while ((line = br.readLine()) != null) {
+                this.tasks.add(line);
+            }
+
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe.getMessage());
+        }
+    }
+
     private boolean updateFile() {
         return false;
     }
-    
+
     private int getLastId() {
-        String lastTask = this.tasks.get(this.tasks.size() -1);
+        String lastTask = this.tasks.get(this.tasks.size() - 1);
         return Integer.valueOf(lastTask.split(",")[0]);
     }
 }
