@@ -1,12 +1,14 @@
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
 public class TodoListService {
     private ArrayList<String> tasks;
-    private final String filePath = "todo.csv";
+    private static final String filePath = "todo.csv";
 
     public TodoListService() {
         this.tasks = new ArrayList<>();
@@ -26,7 +28,17 @@ public class TodoListService {
     }
 
     public void add(String task) {
-        this.tasks.add(getLastId() + "," + task);
+        String taskCsvRow = getLastId() + "," + task;
+        this.tasks.add(taskCsvRow);
+        try (BufferedWriter bw = new BufferedWriter(
+                new FileWriter(TodoListService.filePath, true)
+            )) 
+        {
+            bw.write(taskCsvRow);
+            bw.newLine();
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe.getMessage());
+        }
     }
 
     public ArrayList<String> getTasks() {
