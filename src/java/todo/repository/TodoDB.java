@@ -26,11 +26,11 @@ public class TodoDB {
     private void initSchema() {
         StringBuilder sql = new StringBuilder()
             .append("CREATE TABLE IF NOT EXISTS ").append(TABLE_NAME).append("(")
-            .append(COL_ID).append("INTEGER PRIMARY KEY AUTOINCREMENT,")
-            .append(COL_TASK).append("TEXT NOT NULL,")
-            .append(COL_STATUS).append("TEXT NOT NULL CHECK (status IN ('in progress', 'completed', 'canceled'))")
-            .append("DEFAULT 'in progress',")
-            .append(COL_ADDED_AT).append("TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))")
+            .append(COL_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
+            .append(COL_TASK).append(" TEXT NOT NULL,")
+            .append(COL_STATUS).append(" TEXT NOT NULL CHECK (status IN ('in progress', 'completed', 'canceled'))")
+            .append(" DEFAULT 'in progress',")
+            .append(COL_ADDED_AT).append(" TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))")
             .append(")");
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
             stmt.execute(sql.toString());
@@ -49,7 +49,14 @@ public class TodoDB {
              PreparedStatement ps = conn.prepareStatement(sql.toString());
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                items.add(new TodoItem(rs.getInt("id"), rs.getString("task")));
+                items.add(
+                    new TodoItem(
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TASK),
+                        rs.getString(COL_STATUS),
+                        rs.getString(COL_ADDED_AT)
+                    )
+                );
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to load tasks: " + e.getMessage());
@@ -68,7 +75,8 @@ public class TodoDB {
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
-                    return new TodoItem(keys.getInt(1), task);
+                    System.out.println("inserting....");
+                    // return new TodoItem(keys.getInt(COL_ID), task);
                 }
             }
         } catch (SQLException e) {
