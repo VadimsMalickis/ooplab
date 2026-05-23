@@ -9,6 +9,11 @@ import todo.model.TodoItem;
 public class TodoDB {
 
     private static final String DB_URL = "jdbc:sqlite:todo.db";
+    public static final String TABLE_NAME = "todo";
+    public static final String COL_ID = "id";
+    public static final String COL_TASK = "task";
+    public static final String COL_STATUS = "status";
+    public static final String COL_ADDED_AT = "added_at";
 
     public TodoDB() {
         initSchema();
@@ -19,11 +24,16 @@ public class TodoDB {
     }
 
     private void initSchema() {
-        String sql = "CREATE TABLE IF NOT EXISTS todo ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "task TEXT NOT NULL)";
+        StringBuilder sql = new StringBuilder()
+            .append("CREATE TABLE IF NOT EXISTS ").append(TABLE_NAME).append("(")
+            .append(COL_ID).append("INTEGER PRIMARY KEY AUTOINCREMENT,")
+            .append(COL_TASK).append("TEXT NOT NULL,")
+            .append(COL_STATUS).append("TEXT NOT NULL CHECK (status IN ('in progress', 'completed', 'canceled'))")
+            .append("DEFAULT 'in progress',")
+            .append(COL_ADDED_AT).append("TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))")
+            .append(")");
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+            stmt.execute(sql.toString());
         } catch (SQLException e) {
             throw new RuntimeException("Schema init failed: " + e.getMessage());
         }
@@ -31,9 +41,12 @@ public class TodoDB {
 
     public List<TodoItem> findAll() {
         List<TodoItem> items = new ArrayList<>();
-        String sql = "SELECT id, task FROM todo ORDER BY id";
+        StringBuilder sql = new StringBuilder()
+            .append("SELECT ").append(COL_ID).append(", ").append(COL_TASK)
+            .append(" FROM ").append(TABLE_NAME)
+            .append(" ORDER BY ").append(COL_ADDED_AT);
         try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql);
+             PreparedStatement ps = conn.prepareStatement(sql.toString());
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 items.add(new TodoItem(rs.getInt("id"), rs.getString("task")));
@@ -45,9 +58,12 @@ public class TodoDB {
     }
 
     public TodoItem insert(String task) {
-        String sql = "INSERT INTO todo (task) VALUES (?)";
+        StringBuilder sql = new StringBuilder()
+            .append("INSERT INTO ").append(TABLE_NAME)
+            .append(" (").append(COL_TASK).append(")")
+            .append(" VALUES (?)");
         try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, task);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
@@ -62,9 +78,11 @@ public class TodoDB {
     }
 
     public void deleteById(int id) {
-        String sql = "DELETE FROM todo WHERE id = ?";
+        StringBuilder sql = new StringBuilder()
+            .append("DELETE FROM ").append(TABLE_NAME)
+            .append(" WHERE ").append(COL_ID).append(" = ?");
         try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
