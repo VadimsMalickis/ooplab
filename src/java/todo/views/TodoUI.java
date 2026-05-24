@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import todo.model.TodoItem;
+import todo.repository.TodoDB;
 import todo.service.TodoListService;
 
 import java.awt.*;
@@ -32,7 +33,7 @@ public class TodoUI {
     }
 
     private void createComponents() {
-        String[] headers = {"id", "task"};
+        String[] headers = {TodoDB.COL_ID, TodoDB.COL_TASK, TodoDB.COL_STATUS, TodoDB.COL_ADDED_AT};
         tableModel = new DefaultTableModel(headers, 0) {
             @Override
             public boolean isCellEditable(int row, int col) {
@@ -67,7 +68,7 @@ public class TodoUI {
         tableModel.setRowCount(0);
         List<TodoItem> items = service.getAll();
         for (TodoItem item : items) {
-            tableModel.addRow(new Object[]{item.getId(), item.getTask()});
+            tableModel.addRow(new Object[]{item.getId(), item.getTask(), item.getStatus(), item.getAddedAt()});
         }
     }
 
@@ -75,7 +76,9 @@ public class TodoUI {
         String task = taskInput.getText().trim();
         if (validateTask(task)) {
             TodoItem added = service.add(task);
-            tableModel.addRow(new Object[]{added.getId(), added.getTask()});
+            tableModel.addRow(new Object[]{
+                added.getId(), added.getTask(), added.getStatus(), added.getAddedAt()
+            });
             taskInput.setText("");
         } else {
             JOptionPane.showMessageDialog(

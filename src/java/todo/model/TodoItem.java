@@ -10,6 +10,7 @@ public class TodoItem {
     public TodoItem(int id, String task, String status, String addedAt) {
         this.id = id;
         this.task = task;
+        this.status = status;
         this.addedAt = addedAt;
     }
 

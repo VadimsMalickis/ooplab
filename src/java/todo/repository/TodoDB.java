@@ -42,7 +42,10 @@ public class TodoDB {
     public List<TodoItem> findAll() {
         List<TodoItem> items = new ArrayList<>();
         StringBuilder sql = new StringBuilder()
-            .append("SELECT ").append(COL_ID).append(", ").append(COL_TASK)
+            .append("SELECT ").append(COL_ID)
+            .append(", ").append(COL_TASK)
+            .append(", ").append(COL_STATUS)
+            .append(", ").append(COL_ADDED_AT)
             .append(" FROM ").append(TABLE_NAME)
             .append(" ORDER BY ").append(COL_ADDED_AT);
         try (Connection conn = connect();
@@ -70,19 +73,46 @@ public class TodoDB {
             .append(" (").append(COL_TASK).append(")")
             .append(" VALUES (?)");
         try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, task);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
-                    System.out.println("inserting....");
-                    // return new TodoItem(keys.getInt(COL_ID), task);
+                    int insertedId = keys.getInt(1);
+                    return findById(insertedId);
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to insert task: " + e.getMessage());
         }
         throw new RuntimeException("Insert failed: no generated key returned.");
+    }
+
+    private TodoItem findById(int id) {
+        StringBuilder sql = new StringBuilder()
+            .append("SELECT ").append(COL_ID)
+            .append(", ").append(COL_TASK)
+            .append(", ").append(COL_STATUS)
+            .append(", ").append(COL_ADDED_AT)
+            .append(" FROM ").append(TABLE_NAME)
+            .append(" WHERE ").append(COL_ID).append(" = ?");
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new TodoItem(
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TASK),
+                        rs.getString(COL_STATUS),
+                        rs.getString(COL_ADDED_AT)
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to load inserted task: " + e.getMessage());
+        }
+        throw new RuntimeException("Insert succeeded, but inserted task could not be reloaded.");
     }
 
     public void deleteById(int id) {
