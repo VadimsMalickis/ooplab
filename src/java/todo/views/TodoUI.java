@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import todo.model.TodoItem;
+import todo.service.TaskValidationService;
 import todo.service.TodoService;
 
 import java.awt.*;
@@ -13,13 +14,15 @@ public class TodoUI {
     private static final String[] TABLE_HEADERS = {"id", "task", "status", "added_at"};
 
     private final TodoService service;
+    private final TaskValidationService validationService;
     private JFrame frame;
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField taskInput;
 
-    public TodoUI(TodoService service) {
+    public TodoUI(TodoService service, TaskValidationService validationService) {
         this.service = service;
+        this.validationService = validationService;
     }
 
     public void start() {
@@ -74,7 +77,7 @@ public class TodoUI {
 
     private void addTask() {
         String task = taskInput.getText().trim();
-        if (validateTask(task)) {
+        if (validationService.isValidTask(task)) {
             TodoItem added = service.add(task);
             tableModel.addRow(new Object[]{
                 added.getId(), added.getTask(), added.getStatus(), added.getAddedAt()
@@ -99,11 +102,6 @@ public class TodoUI {
         int id = (int) tableModel.getValueAt(selectedRow, 0);
         service.remove(id);
         tableModel.removeRow(selectedRow);
-    }
-
-    private boolean validateTask(String value) {
-        if (value == null || value.length() < 3) return false;
-        return value.matches("[a-zA-Z0-9 ]+");
     }
 }
 
