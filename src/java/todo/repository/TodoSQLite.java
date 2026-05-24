@@ -6,7 +6,7 @@ import java.util.List;
 
 import todo.model.TodoItem;
 
-public class TodoDB {
+public class TodoSQLite implements TodoRepository {
 
     private static final String DB_URL = "jdbc:sqlite:todo.db";
     public static final String TABLE_NAME = "todo";
@@ -15,7 +15,7 @@ public class TodoDB {
     public static final String COL_STATUS = "status";
     public static final String COL_ADDED_AT = "added_at";
 
-    public TodoDB() {
+    public TodoSQLite() {
         initSchema();
     }
 

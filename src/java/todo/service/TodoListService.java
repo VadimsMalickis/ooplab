@@ -1,27 +1,30 @@
 package todo.service;
 
 import todo.model.TodoItem;
-import todo.repository.TodoDB;
+import todo.repository.TodoRepository;
 
 import java.util.List;
 
-public class TodoListService {
+public class TodoListService implements TodoService {
 
-    private final TodoDB db;
+    private final TodoRepository repository;
 
-    public TodoListService() {
-        this.db = new TodoDB();
+    public TodoListService(TodoRepository repository) {
+        this.repository = repository;
     }
 
+    @Override
     public List<TodoItem> getAll() {
-        return db.findAll();
+        return repository.findAll();
     }
 
+    @Override
     public TodoItem add(String task) {
-        return db.insert(task);
+        return repository.insert(task);
     }
 
+    @Override
     public void remove(int id) {
-        db.deleteById(id);
+        repository.deleteById(id);
     }
 }

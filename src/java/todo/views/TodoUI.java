@@ -4,20 +4,21 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import todo.model.TodoItem;
-import todo.repository.TodoDB;
-import todo.service.TodoListService;
+import todo.service.TodoService;
 
 import java.awt.*;
 import java.util.List;
 
 public class TodoUI {
-    private final TodoListService service;
+    private static final String[] TABLE_HEADERS = {"id", "task", "status", "added_at"};
+
+    private final TodoService service;
     private JFrame frame;
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField taskInput;
 
-    public TodoUI(TodoListService service) {
+    public TodoUI(TodoService service) {
         this.service = service;
     }
 
@@ -33,8 +34,7 @@ public class TodoUI {
     }
 
     private void createComponents() {
-        String[] headers = {TodoDB.COL_ID, TodoDB.COL_TASK, TodoDB.COL_STATUS, TodoDB.COL_ADDED_AT};
-        tableModel = new DefaultTableModel(headers, 0) {
+        tableModel = new DefaultTableModel(TABLE_HEADERS, 0) {
             @Override
             public boolean isCellEditable(int row, int col) {
                 return false;
