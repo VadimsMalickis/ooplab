@@ -12,6 +12,7 @@ import java.util.List;
 
 public class TodoUI {
     private static final String[] TABLE_HEADERS = {"id", "task", "status", "added_at"};
+    private static final String[] STATUS_OPTIONS = {"in progress", "completed", "canceled"};
 
     private final TodoService service;
     private final TaskValidationService validationService;
@@ -19,6 +20,7 @@ public class TodoUI {
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField taskInput;
+    private JComboBox<String> statusInput;
 
     public TodoUI(TodoService service, TaskValidationService validationService) {
         this.service = service;
@@ -64,13 +66,21 @@ public class TodoUI {
         taskInput = new JTextField(20);
         panel.add(taskInput);
 
+        statusInput = new JComboBox<>(STATUS_OPTIONS);
+        panel.add(statusInput);
+
         JButton addButton = new JButton("Add");
         JButton removeButton = new JButton("Remove");
+        JButton statusButton = new JButton("Set Status");
         panel.add(addButton);
         panel.add(removeButton);
+        panel.add(statusButton);
 
         addButton.addActionListener(e -> addTask());
         removeButton.addActionListener(e -> removeTask());
+        statusButton.addActionListener(e -> changeStatus());
+
+        table.getSelectionModel().addListSelectionListener(e -> syncStatusSelection());
     }
 
     private void loadTableData() {
@@ -109,6 +119,32 @@ public class TodoUI {
         int id = (int) tableModel.getValueAt(modelRow, 0);
         service.remove(id);
         tableModel.removeRow(modelRow);
+    }
+
+    private void changeStatus() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(frame, "Select a task to update.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int modelRow = table.convertRowIndexToModel(selectedRow);
+        int id = (int) tableModel.getValueAt(modelRow, 0);
+        String status = (String) statusInput.getSelectedItem();
+
+        TodoItem updated = service.changeStatus(id, status);
+        tableModel.setValueAt(updated.getStatus(), modelRow, 2);
+    }
+
+    private void syncStatusSelection() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        int modelRow = table.convertRowIndexToModel(selectedRow);
+        String currentStatus = (String) tableModel.getValueAt(modelRow, 2);
+        statusInput.setSelectedItem(currentStatus);
     }
 }
 

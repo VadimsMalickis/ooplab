@@ -24,6 +24,11 @@ public class TodoListService implements TodoService {
     }
 
     @Override
+    public TodoItem changeStatus(int id, String status) {
+        return repository.updateStatus(id, status);
+    }
+
+    @Override
     public void remove(int id) {
         repository.deleteById(id);
     }

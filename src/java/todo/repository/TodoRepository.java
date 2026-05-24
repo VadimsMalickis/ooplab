@@ -9,5 +9,7 @@ public interface TodoRepository {
 
     TodoItem insert(String task);
 
+    TodoItem updateStatus(int id, String status);
+
     void deleteById(int id);
 }

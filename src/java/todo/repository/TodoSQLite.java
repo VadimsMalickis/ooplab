@@ -94,6 +94,25 @@ public class TodoSQLite implements TodoRepository {
         throw new RuntimeException("Insert failed: no generated key returned.");
     }
 
+    public TodoItem updateStatus(int id, String status) {
+        StringBuilder sql = new StringBuilder()
+            .append("UPDATE ").append(TABLE_NAME)
+            .append(" SET ").append(COL_STATUS).append(" = ?")
+            .append(" WHERE ").append(COL_ID).append(" = ?");
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            int updatedRows = ps.executeUpdate();
+            if (updatedRows == 0) {
+                throw new RuntimeException("No task found with id " + id);
+            }
+            return findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update task status: " + e.getMessage());
+        }
+    }
+
     private TodoItem findById(int id) {
         StringBuilder sql = new StringBuilder()
             .append("SELECT ").append(COL_ID)

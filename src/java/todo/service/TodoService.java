@@ -9,5 +9,7 @@ public interface TodoService {
 
     TodoItem add(String task);
 
+    TodoItem changeStatus(int id, String status);
+
     void remove(int id);
 }
