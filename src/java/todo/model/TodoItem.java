@@ -14,6 +14,10 @@ public class TodoItem {
         this.addedAt = addedAt;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public int getId() {
         return id;
     }
@@ -31,6 +35,37 @@ public class TodoItem {
     }
     public String getAddedAt() {
         return this.addedAt;
+    }
+
+    public static class Builder {
+        private int id;
+        private String task;
+        private String status;
+        private String addedAt;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder task(String task) {
+            this.task = task;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder addedAt(String addedAt) {
+            this.addedAt = addedAt;
+            return this;
+        }
+
+        public TodoItem build() {
+            return new TodoItem(id, task, status, addedAt);
+        }
     }
     
 }

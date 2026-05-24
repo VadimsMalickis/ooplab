@@ -53,12 +53,12 @@ public class TodoSQLite implements TodoRepository {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 items.add(
-                    new TodoItem(
-                        rs.getInt(COL_ID),
-                        rs.getString(COL_TASK),
-                        rs.getString(COL_STATUS),
-                        rs.getString(COL_ADDED_AT)
-                    )
+                    TodoItem.builder()
+                        .id(rs.getInt(COL_ID))
+                        .task(rs.getString(COL_TASK))
+                        .status(rs.getString(COL_STATUS))
+                        .addedAt(rs.getString(COL_ADDED_AT))
+                        .build()
                 );
             }
         } catch (SQLException e) {
@@ -101,12 +101,12 @@ public class TodoSQLite implements TodoRepository {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new TodoItem(
-                        rs.getInt(COL_ID),
-                        rs.getString(COL_TASK),
-                        rs.getString(COL_STATUS),
-                        rs.getString(COL_ADDED_AT)
-                    );
+                    return TodoItem.builder()
+                        .id(rs.getInt(COL_ID))
+                        .task(rs.getString(COL_TASK))
+                        .status(rs.getString(COL_STATUS))
+                        .addedAt(rs.getString(COL_ADDED_AT))
+                        .build();
                 }
             }
         } catch (SQLException e) {

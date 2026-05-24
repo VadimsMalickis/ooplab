@@ -14,7 +14,8 @@ The project is intended to use standard application development technologies for
 - Basic build and runtime tooling for the selected development environment
 
 ### Libraries
-No external libraries are currently documented in this README. If the project includes dependencies, they should be listed here with their roles.
+- SQLite (via JDBC): Used for persistent local data storage.
+- Java Swing: Used to build the desktop graphical user interface.
 
 ### Project Scope
 This application is likely designed as a lab or coursework project rather than a production system. Its main goal is to demonstrate clean object-oriented structure and coding practice.
