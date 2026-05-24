@@ -20,8 +20,21 @@ The project is intended to use standard application development technologies for
 ### Project Scope
 This application is likely designed as a lab or coursework project rather than a production system. Its main goal is to demonstrate clean object-oriented structure and coding practice.
 
-### Suggested Next Additions
-- Installation steps
-- How to run the project
-- Dependency list
-- Usage examples
+### Explanation of Architecture
+The application follows a layered, object-oriented desktop architecture:
+
+- **Presentation Layer (Swing UI):** Handles user interaction through frames, panels, buttons, forms, and tables. It captures input and displays results.
+- **Business/Domain Layer:** Contains core classes and logic that model the system behavior. This layer applies OOP principles such as encapsulation, inheritance, and polymorphism.
+- **Data Access Layer (JDBC + SQLite):** Manages database connectivity and CRUD operations. DAO-style classes isolate SQL and persistence details from business logic.
+
+### Explanation of used design patterns
+The project likely uses a small set of common design patterns suitable for a Java Swing application with SQLite:
+
+- **Model-View-Controller (MVC):** Helps separate the user interface, application logic, and data handling. In a Swing-based application, frames and panels act as the view, domain/services act as the model, and event-handling logic often plays the controller role.
+- **Singleton:** May be used for shared resources such as a database connection manager or application-wide configuration. This ensures controlled access to a single instance. Used in TodoSQLite class.
+- **Builder:** Can be used to construct complex domain objects or UI forms step by step. This improves readability and makes object creation more flexible when many fields or configuration options are involved. Used in TodoItem class.
+- **Observer:** Common in GUI applications where components respond to user actions and state changes through listeners and events. Swing's event model naturally supports this pattern. Used with Java Swing library events.
+
+
+
+

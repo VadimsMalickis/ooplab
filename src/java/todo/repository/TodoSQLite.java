@@ -8,6 +8,8 @@ import todo.model.TodoItem;
 
 public class TodoSQLite implements TodoRepository {
 
+    private static final TodoSQLite INSTANCE = new TodoSQLite();
+
     private static final String DB_URL = "jdbc:sqlite:todo.db";
     public static final String TABLE_NAME = "todo";
     public static final String COL_ID = "id";
@@ -15,7 +17,11 @@ public class TodoSQLite implements TodoRepository {
     public static final String COL_STATUS = "status";
     public static final String COL_ADDED_AT = "added_at";
 
-    public TodoSQLite() {
+    public static TodoSQLite getInstance() {
+        return INSTANCE;
+    }
+
+    private TodoSQLite() {
         initSchema();
     }
 
