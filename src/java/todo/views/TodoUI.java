@@ -42,11 +42,17 @@ public class TodoUI {
             public boolean isCellEditable(int row, int col) {
                 return false;
             }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Integer.class : String.class;
+            }
         };
 
         loadTableData();
 
         table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getColumnModel().getColumn(0).setMaxWidth(60);
 
@@ -99,9 +105,10 @@ public class TodoUI {
             JOptionPane.showMessageDialog(frame, "Select a task to remove.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        int id = (int) tableModel.getValueAt(selectedRow, 0);
+        int modelRow = table.convertRowIndexToModel(selectedRow);
+        int id = (int) tableModel.getValueAt(modelRow, 0);
         service.remove(id);
-        tableModel.removeRow(selectedRow);
+        tableModel.removeRow(modelRow);
     }
 }
 
