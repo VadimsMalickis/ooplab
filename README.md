@@ -1,18 +1,26 @@
-## Getting Started
+## OOP Lab
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+This project is an Object-Oriented Programming lab application focused on demonstrating and practicing core OOP principles.
 
-## Folder Structure
+### Purpose
+- To practice object-oriented design and implementation
+- To organize logic into reusable classes and modules
+- To support learning concepts such as encapsulation, inheritance, polymorphism, and abstraction
 
-The workspace contains two folders by default, where:
+### Technologies Used
+The project is intended to use standard application development technologies for an OOP-based codebase, including:
+- An object-oriented programming language
+- The language's standard library
+- Basic build and runtime tooling for the selected development environment
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+### Libraries
+No external libraries are currently documented in this README. If the project includes dependencies, they should be listed here with their roles.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+### Project Scope
+This application is likely designed as a lab or coursework project rather than a production system. Its main goal is to demonstrate clean object-oriented structure and coding practice.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+### Suggested Next Additions
+- Installation steps
+- How to run the project
+- Dependency list
+- Usage examples
