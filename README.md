@@ -7,6 +7,14 @@ This project is an Object-Oriented Programming lab application focused on demons
 - To organize logic into reusable classes and modules
 - To support learning concepts such as encapsulation, inheritance, polymorphism, and abstraction
 
+### Application features
+- Manage user tasks
+- View table of added tasks
+- Add tasks
+- Sort tasks
+- Remove tasks
+- Change task status
+
 ### Technologies Used
 The project is intended to use standard application development technologies for an OOP-based codebase, including:
 - An object-oriented programming language
